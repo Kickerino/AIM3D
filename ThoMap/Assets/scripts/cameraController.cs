@@ -12,36 +12,71 @@ public class cameraController : MonoBehaviour {
     public Rigidbody BulletAir;
     public Rigidbody BulletEarth;
     public Transform WandEnd;
-    public Text myText;
-    
-	
+    private bool CanUsesfire = true;
+    private bool CanUsesair = true;
+    private bool CanUsesearth = true;
+    private bool CanUseswater = true;
+
+    public Text fireText;
+    public Text waterText;
+    public Text windText;
+    public Text earthText;
+
+    IEnumerator fireShoot()
+    {
+        CanUsesfire = false;
+        launchObject(BulletFire);
+        yield return new WaitForSeconds(1.3f);
+        CanUsesfire = true;  
+    }
+    IEnumerator airShoot()
+    {
+        CanUsesair = false;
+        launchObject(BulletAir);
+        yield return new WaitForSeconds(1.3f);
+        CanUsesair = true;
+    }
+    IEnumerator earthShoot()
+    {
+        CanUsesearth = false;
+        launchObject(BulletEarth);
+        yield return new WaitForSeconds(1.3f);
+        CanUsesearth = true;
+    }
+    IEnumerator waterShoot()
+    {
+        CanUseswater = false;
+        launchObject(BulletWater);
+        yield return new WaitForSeconds(1.3f);
+        CanUseswater = true;
+    }
+
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.JoystickButton1))
+        fireText.text = "" + CanUsesfire;
+        waterText.text = "" + CanUseswater;
+        windText.text = "" + CanUsesair;
+        earthText.text = "" + CanUsesearth;
+
+
+        if (Input.GetKeyDown(KeyCode.JoystickButton1) && CanUsesfire == true)
         {
-            Debug.Log("Button B");
-            myText.text = "Button B";
-            launchfire();
+            StartCoroutine(fireShoot());
         }
-        
-        if (Input.GetKeyDown(KeyCode.JoystickButton0))
+
+        if (Input.GetKeyDown(KeyCode.JoystickButton0) && CanUsesearth == true)
         {
-            Debug.Log("Button A");
-            myText.text = "Button A";
-            launchEarth();
+            StartCoroutine(earthShoot()); 
         }
-        
-        if (Input.GetKeyDown(KeyCode.JoystickButton2))
+
+        if (Input.GetKeyDown(KeyCode.JoystickButton2) && CanUseswater == true)
         {
-            Debug.Log("Button X");
-            myText.text = "Button X";
-            launchWater();
+            StartCoroutine(waterShoot());
         }
-        
-        if (Input.GetKeyDown(KeyCode.JoystickButton3))
+
+        if (Input.GetKeyDown(KeyCode.JoystickButton3) && CanUsesair == true)
         {
-            Debug.Log("Button Y");
-            myText.text = "Button Y";
-            launchAir();
+            StartCoroutine(airShoot());
+            
         }
         float h = horizontalSpeed * Input.GetAxis("Joystick X");
         //float v = verticalSpeed * Input.GetAxis("Joystick Y");
@@ -56,29 +91,10 @@ public class cameraController : MonoBehaviour {
         }
 	}
 
-
-    void launchWater()
+    void launchObject(Rigidbody ayy)
     {
         Rigidbody Bulletinstance;
-        Bulletinstance = Instantiate(BulletWater, WandEnd.position, WandEnd.rotation) as Rigidbody;
-        Bulletinstance.AddForce(WandEnd.forward * 5000);
-    }
-    void launchfire()
-    {
-        Rigidbody Bulletinstance;
-        Bulletinstance = Instantiate(BulletFire, WandEnd.position, WandEnd.rotation) as Rigidbody;
-        Bulletinstance.AddForce(WandEnd.forward * 5000);
-    }
-    void launchAir()
-    {
-        Rigidbody Bulletinstance;
-        Bulletinstance = Instantiate(BulletAir, WandEnd.position, WandEnd.rotation) as Rigidbody;
-        Bulletinstance.AddForce(WandEnd.forward * 5000);
-    }
-    void launchEarth()
-    {
-        Rigidbody Bulletinstance;
-        Bulletinstance = Instantiate(BulletEarth, WandEnd.position, WandEnd.rotation) as Rigidbody;
+        Bulletinstance = Instantiate(ayy, WandEnd.position, WandEnd.rotation) as Rigidbody;
         Bulletinstance.AddForce(WandEnd.forward * 5000);
     }
 }
